@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Latihan Mansoskul DJP</title>
+<meta name="description" content="Latihan soal SJT Kompetensi Manajerial dan Sosial Kultural (Permenpan RB 38/2017) berlatar kantor pajak.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap">
+<style>
+:root{
+  --bg:#F3F6F7; --surface:#FFFFFF; --ink:#15222B; --muted:#5A6A74; --line:#D9E1E5;
+  --accent:#0E5A6E; --accent-ink:#FFFFFF; --accent-soft:#E0EEF1; --ok:#1E7548; --oks:#E1F2E8;
+  --font-body:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --font-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root{
+  --bg:#0F171C; --surface:#16222A; --ink:#E4ECEF; --muted:#93A4AD; --line:#2A3A44;
+  --accent:#5FB6CB; --accent-ink:#0B161B; --accent-soft:#17323B; --ok:#5CC98E; --oks:#173528;
+  color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:15px;line-height:1.55}
+.wrap{max-width:760px;margin:0 auto;padding:28px max(16px,env(safe-area-inset-left,0px)) 48px}
+h1{font-size:24px;margin:0 0 4px;letter-spacing:-.01em;text-wrap:balance}
+.lead{color:var(--muted);margin:0 0 24px;max-width:62ch}
+.list{display:flex;flex-direction:column;gap:12px}
+a.pk{display:grid;grid-template-columns:1fr auto;gap:6px 16px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px;color:inherit;text-decoration:none}
+a.pk:hover{border-color:var(--accent)}
+a.pk:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.t{font-weight:700;font-size:16px}
+.meta{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.chip.o{background:transparent;border:1px solid var(--line);color:var(--muted)}
+.prog{grid-row:1 / span 2;grid-column:2;text-align:right;font-family:var(--font-mono);font-variant-numeric:tabular-nums;font-size:13px;color:var(--muted)}
+.prog b{display:block;font-size:17px;color:var(--ink)}
+.prog.done b{color:var(--ok)}
+.bar{grid-column:1 / -1;height:4px;border-radius:99px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent)}
+.note{color:var(--muted);font-size:13px;margin-top:24px;max-width:62ch}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Latihan Mansoskul DJP</h1>
+  <p class="lead">Soal SJT Kompetensi Manajerial dan Sosial Kultural (Permenpan RB 38/2017) berlatar kantor pajak. Setiap paket berisi 50 soal yang langsung dinilai saat dijawab, lengkap dengan kunci, alasan, level kompetensi, dan rekap skor.</p>
+  <div class="list" id="list"><p class="lead">Memuat daftar paket…</p></div>
+  <p class="note">Jawaban tersimpan di browser yang Anda pakai, terpisah untuk setiap paket.</p>
+</div>
+<script>
+(function(){
+  var BULAN=["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+  function done(key){try{var r=localStorage.getItem(key);if(!r)return 0;var p=JSON.parse(r);return p&&p.ans?Object.keys(p.ans).length:0}catch(e){return 0}}
+  function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+  fetch("/paket.json",{cache:"no-store"}).then(function(r){return r.json()}).then(function(list){
+    list.sort(function(a,b){return a.tanggal<b.tanggal?1:a.tanggal>b.tanggal?-1:0});
+    document.getElementById("list").innerHTML=list.map(function(p){
+      var n=done(p.kunci),tot=p.jumlah||50,pct=Math.round(n/tot*100);
+      return '<a class="pk" href="/paket/'+encodeURIComponent(p.id)+'/">'+
+        '<span class="t">'+esc(p.judul)+'</span>'+
+        '<span class="prog'+(n>=tot?' done':'')+'"><b>'+n+'/'+tot+'</b>'+(n>=tot?'Selesai':n?'Lanjutkan':'Belum mulai')+'</span>'+
+        '<span class="meta"><span class="chip">'+esc(p.tingkat)+'</span><span class="chip o">'+esc(p.level)+'</span><span class="chip o">'+tot+' soal</span></span>'+
+        '<span class="bar"><i style="width:'+pct+'%"></i></span></a>';
+    }).join("");
+  }).catch(function(){document.getElementById("list").innerHTML='<p class="lead">Daftar paket gagal dimuat. Muat ulang halaman ini.</p>'});
+})();
+</script>
+</body>
+</html>

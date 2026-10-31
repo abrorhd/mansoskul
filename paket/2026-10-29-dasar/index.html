@@ -1,0 +1,391 @@
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style></head><body>
+<title>Latihan Mansoskul DJP 29 Okt (dasar)</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: one exam card at a time, a sticky score bar above, a 50-cell answer grid below; Kunci and Rekap as sibling views. */
+:root{
+  --bg:#F3F6F7; --surface:#FFFFFF; --ink:#15222B; --muted:#5A6A74; --line:#D9E1E5;
+  --accent:#0E5A6E; --accent-ink:#FFFFFF; --accent-soft:#E0EEF1;
+  --w5:#1E7548; --w5s:#E1F2E8; --w4:#4D7F2A; --w4s:#EDF5E3;
+  --w3:#9A6400; --w3s:#FAF0DA; --w2:#B4462E; --w2s:#F9E6E0; --w1:#A12F3A; --w1s:#F6E1E3;
+  --font-body:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --font-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F171C; --surface:#16222A; --ink:#E4ECEF; --muted:#93A4AD; --line:#2A3A44;
+  --accent:#5FB6CB; --accent-ink:#0B161B; --accent-soft:#17323B;
+  --w5:#5CC98E; --w5s:#173528; --w4:#9CCB6A; --w4s:#243320;
+  --w3:#E3AE4B; --w3s:#3A2F15; --w2:#EE8A70; --w2s:#3D2219; --w1:#F07D88; --w1s:#3C1C21;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F171C; --surface:#16222A; --ink:#E4ECEF; --muted:#93A4AD; --line:#2A3A44;
+  --accent:#5FB6CB; --accent-ink:#0B161B; --accent-soft:#17323B;
+  --w5:#5CC98E; --w5s:#173528; --w4:#9CCB6A; --w4s:#243320;
+  --w3:#E3AE4B; --w3s:#3A2F15; --w2:#EE8A70; --w2s:#3D2219; --w1:#F07D88; --w1s:#3C1C21;
+  color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:15px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+.wrap{max-width:760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line)}
+.bar .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;padding-block:12px}
+.brand{display:flex;flex-direction:column;min-width:0;flex:1 1 220px}
+.brand h1{font-size:17px;margin:0;font-weight:700;letter-spacing:-.01em;text-wrap:balance}
+.brand span{font-size:12px;color:var(--muted)}
+.stats{display:flex;gap:16px;font-family:var(--font-mono);font-variant-numeric:tabular-nums;font-size:13px}
+.stats div{display:flex;flex-direction:column;align-items:flex-end}
+.stats b{font-size:17px;font-weight:600}
+.stats small{font-family:var(--font-body);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.progress{height:4px;background:var(--line)}
+.progress i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
+nav.tabs{display:flex;gap:6px;padding-block:14px 4px;flex-wrap:wrap}
+nav.tabs button{font:600 13px var(--font-body);padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer}
+nav.tabs button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+main{padding-block:10px 48px;display:flex;flex-direction:column;gap:18px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px}
+.qhead{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+.qno{font-family:var(--font-mono);font-weight:600;font-size:13px;color:var(--muted)}
+.chip{font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:999px;background:var(--accent-soft);color:var(--accent);letter-spacing:.02em}
+.chip.lvl{background:transparent;border:1px solid var(--line);color:var(--muted)}
+.chip.lv{background:var(--ink);color:var(--surface)}
+.stem{font-size:16px;margin:0 0 18px;max-width:65ch}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{display:grid;grid-template-columns:30px 1fr auto;gap:12px;align-items:start;text-align:left;width:100%;font:inherit;color:inherit;background:var(--surface);border:1.5px solid var(--line);border-radius:10px;padding:12px 14px;cursor:pointer;transition:border-color .15s,background .15s}
+.opt:hover:not([disabled]){border-color:var(--accent)}
+.opt:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.opt[disabled]{cursor:default}
+.opt .L{font-family:var(--font-mono);font-weight:600;width:30px;height:30px;border-radius:8px;display:grid;place-items:center;background:var(--bg);border:1px solid var(--line);font-size:13px}
+.opt .t{min-width:0;padding-top:4px}
+.opt .w{font-family:var(--font-mono);font-size:12px;font-weight:600;padding:3px 8px;border-radius:6px;visibility:hidden;white-space:nowrap;margin-top:3px}
+.answered .opt .w{visibility:visible}
+.answered .opt{opacity:.72}
+.answered .opt.best,.answered .opt.mine{opacity:1}
+.opt.best{border-color:var(--w5);background:var(--w5s)}
+.opt.mine:not(.best){border-color:var(--wc);background:var(--wcs)}
+.opt.mine .L{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.w5{--wc:var(--w5);--wcs:var(--w5s)} .w4{--wc:var(--w4);--wcs:var(--w4s)} .w3{--wc:var(--w3);--wcs:var(--w3s)} .w2{--wc:var(--w2);--wcs:var(--w2s)} .w1{--wc:var(--w1);--wcs:var(--w1s)}
+.opt .w{color:var(--wc);background:var(--wcs)}
+.verdict{margin-top:18px;border-radius:10px;padding:14px 16px;background:var(--wcs);border:1px solid var(--wc);display:flex;flex-direction:column;gap:6px}
+.verdict strong{color:var(--wc);font-size:15.5px}
+.verdict p{margin:0;max-width:65ch}
+.verdict .k{font-size:13px;color:var(--muted)}
+.navrow{display:flex;justify-content:space-between;gap:10px;margin-top:18px;flex-wrap:wrap}
+.btn{font:600 14px var(--font-body);padding:10px 16px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn:disabled{opacity:.4;cursor:default}
+.btn:focus-visible,nav.tabs button:focus-visible,.cell:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.gridhead{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.gridhead h2,.card h2{font-size:15px;margin:0}
+.legend{display:flex;gap:10px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:10px;height:10px;border-radius:3px;background:var(--wc)}
+.grid{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:6px}
+.cell{font:600 12px var(--font-mono);font-variant-numeric:tabular-nums;aspect-ratio:1;max-width:100%;border-radius:7px;border:1px solid var(--line);background:var(--bg);color:var(--muted);cursor:pointer;padding:0}
+.cell.done{background:var(--wcs);border-color:var(--wc);color:var(--wc)}
+.cell.cur{outline:2px solid var(--ink);outline-offset:1px}
+.tblwrap{overflow-x:auto;margin-top:12px}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+td.n,th.n{text-align:right;font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+td.key{font-family:var(--font-mono);font-weight:600;color:var(--w5)}
+.pill{font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--wcs);color:var(--wc);white-space:nowrap}
+.big{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.big b{font:600 40px var(--font-mono);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.big span{color:var(--muted)}
+.note{color:var(--muted);font-size:13.5px;margin:6px 0 0;max-width:65ch}
+ul.tips{margin:10px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:6px;max-width:65ch}
+.bar100{height:6px;border-radius:99px;background:var(--line);min-width:60px;overflow:hidden}
+.bar100 i{display:block;height:100%;background:var(--wc)}
+.confirm{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13.5px}
+.mykey{font-family:var(--font-mono);font-weight:600}
+@media (max-width:480px){.card{padding:16px}.grid{gap:4px}.stem{font-size:15.5px}.opt{grid-template-columns:28px 1fr;}.opt .w{grid-column:2;justify-self:start;margin-top:0}.answered .opt .w{display:inline-block}.opt .w{display:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<header class="bar">
+  <div class="wrap">
+    <div class="brand">
+      <a class="backlink" href="/" style="font:600 13px var(--font-body,system-ui);color:var(--accent,#0E5A6E);text-decoration:none;white-space:nowrap">&larr; Semua paket</a>
+      <h1>Latihan Mansoskul DJP</h1>
+      <span>Paket 29 Oktober 2026 · 50 soal SJT · bobot 1–5</span>
+    </div>
+    <div class="stats">
+      <div><b id="sDone">0/50</b><small>Dijawab</small></div>
+      <div><b id="sScore">0</b><small>Skor</small></div>
+      <div><b id="sPct">–</b><small>Capaian</small></div>
+    </div>
+  </div>
+  <div class="progress"><i id="prog"></i></div>
+</header>
+
+<div class="wrap">
+  <nav class="tabs" role="tablist">
+    <button role="tab" id="tab-latihan" aria-selected="true" data-v="latihan">Latihan</button>
+    <button role="tab" id="tab-kunci" aria-selected="false" data-v="kunci">Kunci jawaban</button>
+    <button role="tab" id="tab-rekap" aria-selected="false" data-v="rekap">Rekap skor</button>
+  </nav>
+  <main>
+    <section id="v-latihan">
+      <div class="card" id="qcard"></div>
+      <div class="card" style="margin-top:18px">
+        <div class="gridhead">
+          <h2>Peta jawaban</h2>
+          <div class="legend">
+            <span class="w5"><i></i>5</span><span class="w4"><i></i>4</span><span class="w3"><i></i>3</span><span class="w2"><i></i>2</span><span class="w1"><i></i>1</span>
+          </div>
+        </div>
+        <div class="grid" id="grid"></div>
+      </div>
+    </section>
+    <section id="v-kunci" hidden>
+      <div class="card">
+        <h2>Kunci dan bobot</h2>
+        <p class="note">Huruf mengikuti urutan opsi di halaman ini (sudah diacak agar kunci tidak menumpuk di satu huruf), jadi berbeda dengan dokumen soal.</p>
+        <div class="tblwrap"><table id="ktable"></table></div>
+      </div>
+    </section>
+    <section id="v-rekap" hidden>
+      <div class="card" id="rekap"></div>
+    </section>
+  </main>
+</div>
+
+<script>
+(function(){
+var COMP={INT:"Integritas",KS:"Kerjasama",OH:"Orientasi pada Hasil",PP:"Pelayanan Publik",PK:"Pengambilan Keputusan",KOM:"Komunikasi",MP:"Mengelola Perubahan",PD:"Pengembangan Diri & Orang Lain",PB:"Perekat Bangsa"};
+var D=[
+["PP","Lima menit sebelum TPT tutup, seorang wajib pajak lansia datang untuk aktivasi EFIN. Fotokopi KTP-nya kurang satu lembar dan mesin fotokopi lobi sudah dimatikan. Di belakangnya masih ada tiga antrean dengan berkas lengkap.",["Jelaskan syaratnya dan minta beliau datang lagi besok membawa fotokopi KTP.","Fotokopi KTP di mesin ruang seksi, selesaikan aktivasi beliau, lalu habiskan sisa antrean meski lewat jam tutup.","Terima permohonan tanpa fotokopi KTP, kelengkapan menyusul kapan-kapan.","Minta rekan seksi membantu fotokopi sementara Anda mulai verifikasi berkas beliau.","Selesaikan dulu tiga antrean berkas lengkap, baru bantu beliau kalau waktu masih ada."],[2,5,1,4,3],"Layanan tuntas tanpa menabrak syarat berkas, dan beban tidak dipindahkan ke antrean lain."],
+["INT","Dua hari setelah permohonan restitusi seorang wajib pajak terbit, sebuah parsel buah dan voucher belanja diantar ke meja Anda atas nama perusahaan tersebut. Nilainya tidak besar.",["Kembalikan parsel ke pengirim dan laporkan penerimaan gratifikasi ke UPG kantor dalam 7 hari kerja.","Kembalikan parsel ke wajib pajak hari itu juga tanpa melapor, karena toh sudah ditolak.","Simpan dulu, lalu tanyakan ke atasan apakah nilai segitu masuk kategori wajar.","Serahkan ke sekretariat agar dibagikan merata ke seluruh pegawai seksi.","Terima saja, karena keputusan restitusi sudah selesai dan tidak terpengaruh apa pun."],[5,4,3,2,1],"Menolak sekaligus mencatat; pengembalian tanpa laporan menyisakan risiko di kemudian hari."],
+["KS","Anda butuh data hasil analisis seksi lain untuk menutup satu kasus pengawasan. Rekan yang memegang data menahannya dengan alasan kasusnya juga sedang mereka garap, dan dua kali permintaan Anda tidak dibalas.",["Laporkan ke Kepala Kantor bahwa seksi tersebut menghambat pekerjaan Anda.","Ajak rekan itu bicara empat mata, petakan bagian mana yang beririsan, lalu sepakati pembagian penanganan.","Kerjakan ulang analisisnya sendiri dari awal agar tidak bergantung pada mereka.","Kirim permintaan ketiga lewat email dengan tembusan ke dua kepala seksi.","Tunda kasus itu sampai mereka bersedia membuka datanya."],[2,5,3,4,1],"Menyentuh akar masalahnya, yaitu irisan kewenangan, bukan memenangkan perebutan data."],
+["OH","Dua minggu menjelang tutup triwulan, capaian penerimaan seksi Anda tertinggal 12% dari target. Sebagian potensi ada di wajib pajak yang belum pernah dihubungi tahun ini.",["Susun daftar wajib pajak berpotensi terbesar, hubungi dari urutan teratas, dan laporkan progres harian ke kepala seksi.","Kirim imbauan massal ke seluruh wajib pajak di wilayah kerja agar jangkauannya luas.","Sampaikan ke kepala seksi bahwa target triwulan ini memang tidak realistis sejak awal.","Fokuskan tenaga pada wajib pajak yang sudah responsif karena peluangnya lebih pasti.","Tunggu arahan resmi dari Kanwil soal strategi pengamanan penerimaan."],[5,3,1,4,2],"Potensi dipakai sebagai dasar urutan kerja, dan progres bisa dikoreksi di tengah jalan."],
+["KOM","Anda menyampaikan hasil permintaan penjelasan atas data kepada seorang wajib pajak. Baru lima menit, ia memotong dengan nada tinggi, menyebut datanya mengada-ada, dan bicara makin keras di ruang konsultasi terbuka.",["Hentikan penjelasan, serahkan surat, dan minta ia menanggapi tertulis saja.","Naikkan volume suara agar penjelasan Anda tetap terdengar dan selesai.","Pindahkan ke ruang tertutup, biarkan ia bicara sampai selesai, lalu tunjukkan sumber datanya satu per satu.","Panggil kepala seksi untuk mengambil alih pembicaraan.","Katakan bahwa Anda hanya menjalankan tugas dan keberatan bisa diajukan lewat jalur resmi."],[3,1,5,4,2],"Konflik dipindahkan dari ruang publik, keberatan dijawab dengan bukti, bukan dengan kuasa."],
+["PB","Di grup WhatsApp kantor, seorang rekan melempar candaan yang mengait-ngaitkan kepatuhan pajak sebuah kelompok usaha dengan latar etnisnya. Beberapa rekan membalas dengan emoji tertawa.",["Diamkan saja, karena itu hanya candaan di ruang internal dan tidak ada niat jahat.","Balas di grup bahwa data kepatuhan tidak pernah dipilah atas dasar etnis, lalu lanjutkan pembicaraan ke substansi datanya.","Keluar dari grup agar tidak terlibat.","Japri rekan tersebut dan minta ia menghapus pesannya.","Tangkap layar percakapan itu dan kirim ke kepala kantor."],[2,5,1,4,3],"Isi candaannya dikoreksi di tempat yang sama tanpa mempermalukan orangnya."],
+["PK","Saat menyiapkan usulan tindak lanjut, Anda menemukan nilai peredaran usaha di sistem berbeda jauh dengan dokumen fisik yang diserahkan wajib pajak. Usulan harus naik ke kepala seksi besok pagi.",["Pakai angka sistem karena itu yang resmi tercatat, dan lanjutkan usulan sesuai jadwal.","Telusuri sumber selisihnya malam ini, tulis usulan dengan kedua angka beserta temuan sementara, dan tandai butir yang masih perlu konfirmasi.","Pakai angka dokumen fisik karena berasal langsung dari wajib pajak.","Tunda usulan tanpa batas waktu sampai selisihnya tuntas.","Pilih angka yang lebih kecil agar aman jika kelak dipersoalkan."],[4,5,3,2,1],"Keputusan tetap terbit tepat waktu, tetapi ketidakpastiannya diturunkan dan ditandai."],
+["MP","Kantor beralih ke prosedur kerja baru. Satu rekan senior terus memakai cara lama, dan hasil kerjanya jadi harus diinput ulang oleh rekan lain setiap minggu.",["Laporkan ketidakpatuhannya ke kepala seksi agar ditegur.","Ikut saja memakai cara lama agar pekerjaan tim tetap seragam.","Duduk bersamanya, tanyakan bagian mana yang menyulitkan, dan dampingi sekali siklus penuh sampai ia bisa.","Kirim ulang tautan panduan prosedur baru ke grup seksi.","Biarkan, karena perubahan butuh waktu dan ia akan menyesuaikan sendiri."],[3,1,5,4,2],"Menyasar penyebabnya, yaitu ketidakmampuan dan bukan pembangkangan, lewat pendampingan yang ada ujungnya."],
+["PD","Pegawai baru di seksi Anda berulang kali salah memasukkan data. Ia pandai, tetapi tidak pernah bertanya dan baru ketahuan salah saat berkas dikembalikan.",["Perbaiki sendiri kesalahannya setiap kali muncul agar pekerjaan tidak tertahan.","Tunjukkan letak kesalahannya, minta ia memperbaiki sendiri, lalu periksa bersama di akhir hari selama dua minggu.","Sampaikan ke kepala seksi agar ia diikutkan pelatihan dulu sebelum diberi berkas lagi.","Ingatkan di depan tim agar yang lain juga belajar dari kesalahan itu.","Kurangi beban berkasnya sampai ia terlihat lebih siap."],[3,5,4,1,2],"Koreksi tetap di tangan yang bersangkutan, dengan jaring pengaman berbatas waktu."],
+["INT","Sepupu Anda membuka usaha dan meminta tolong “diuruskan” urusan pajaknya, termasuk minta diberi tahu lebih dulu kalau usahanya masuk daftar pengawasan.",["Jelaskan jalur resmi dan bantu ia memahaminya, tolak permintaan informasi pengawasan, lalu laporkan hubungan keluarga ini bila usahanya masuk wilayah kerja Anda.","Tolak seluruhnya dan minta ia memakai konsultan pajak saja.","Bantu urusan administrasinya, tetapi tidak membocorkan apa pun soal pengawasan.","Bantu seadanya karena ini keluarga, selama Anda sendiri tidak menerima uang.","Arahkan ke rekan seksi lain supaya Anda tidak menangani langsung berkas keluarga."],[5,4,2,1,3],"Membantu pada bagian yang boleh, menolak yang tidak boleh, dan mendahului benturan kepentingan dengan deklarasi."],
+["PP","Seorang wajib pajak mengeluh di media sosial bahwa layanan kantor Anda lambat, dan menyebut nama seksi Anda. Setelah dicek, berkasnya memang tertahan empat hari karena satu syarat belum lengkap, tetapi kantor tidak pernah memberitahunya.",["Minta bagian humas membalas bahwa keterlambatan disebabkan berkas wajib pajak sendiri yang tidak lengkap.","Hubungi wajib pajak, akui bahwa pemberitahuan kekurangan berkas memang tidak dikirim, sebutkan apa yang kurang dan kapan selesai, lalu usulkan pemberitahuan otomatis untuk kasus serupa.","Abaikan unggahan itu dan percepat diam-diam penyelesaian berkasnya.","Minta wajib pajak menghapus unggahannya lebih dulu, baru berkasnya diproses.","Laporkan unggahan itu ke atasan dan tunggu arahan sebelum menghubungi siapa pun."],[2,5,3,1,4],"Mengakui kegagalan kantor yang memang nyata, memberi kepastian waktu, lalu menutup celahnya untuk kasus berikutnya."],
+["KS","Tim gabungan lintas seksi dibentuk untuk satu kegiatan. Dalam dua rapat, satu anggota selalu menyanggah usul orang lain tanpa menawarkan alternatif, dan rapat jadi molor tanpa keputusan.",["Hentikan membahas usulnya dan putuskan berdasarkan suara terbanyak anggota lain.","Minta ketua tim menegur anggota tersebut di rapat berikutnya.","Minta setiap sanggahan disertai satu usulan pengganti, dan berlakukan aturan itu untuk semua anggota termasuk Anda.","Bahas keputusan penting di luar rapat bersama anggota yang kooperatif saja.","Biarkan dinamika itu berjalan, karena perdebatan menandakan tim kritis."],[4,3,5,1,2],"Mengubah aturan main rapat, bukan menyerang orangnya, dan berlaku pula untuk diri sendiri."],
+["OH","Anda memegang tiga pekerjaan dengan tenggat berdekatan. Di tengah itu, kepala seksi menitipkan satu tugas mendadak yang menurutnya hanya butuh satu jam, tetapi perkiraan Anda tiga jam.",["Terima tugas itu, kerjakan lebih dulu, dan terlambatkan satu pekerjaan lain tanpa memberi tahu siapa pun.","Tolak karena beban Anda sudah penuh.","Sampaikan perkiraan tiga jam beserta dampaknya ke tenggat yang mana, lalu minta kepala seksi menentukan urutan prioritasnya.","Terima dan kerjakan semuanya dengan lembur, berapa pun waktunya.","Kerjakan tugas titipan itu seadanya agar cepat selesai."],[3,2,5,4,1],"Penentuan prioritas dikembalikan ke pemilik prioritas, lengkap dengan informasi untuk memutus."],
+["KOM","Anda harus menjelaskan perubahan ketentuan kepada kelompok wajib pajak usaha kecil. Saat sesi berjalan, wajah peserta kosong dan tidak ada yang bertanya di akhir.",["Tutup sesi dan bagikan salinan materi agar bisa dibaca sendiri di rumah.","Ulangi seluruh materi sekali lagi dari awal dengan lebih pelan.","Berhenti, ganti dengan satu contoh kasus usaha yang mirip milik mereka, lalu minta dua peserta menghitung ulang di depan.","Tanyakan “sudah paham semua, ya?” lalu lanjutkan ke bagian berikutnya.","Sebutkan bahwa materi ini memang rumit dan sarankan mereka memakai jasa konsultan."],[3,4,5,2,1],"Cara mengajarnya diubah, bukan diulang; pemahaman diuji, bukan ditanyakan."],
+["PK","Sebuah permohonan wajib pajak memenuhi semua syarat formal, tetapi Anda melihat indikasi kuat dokumen pendukungnya tidak mencerminkan transaksi sebenarnya. Batas waktu tanggapan tinggal dua hari.",["Setujui saja, karena syarat formalnya lengkap dan beban pembuktian ada di pihak lain.","Tolak permohonan dengan alasan ada indikasi ketidakwajaran.","Tuliskan indikasi itu beserta buktinya dalam berkas, ajukan ke atasan sebagai bahan keputusan, dan usulkan penelitian lanjutan.","Lewatkan tenggat dua hari agar punya waktu menelusuri sendiri.","Hubungi wajib pajak dan minta ia menarik permohonannya."],[3,4,5,1,2],"Temuan tidak hilang, tenggat tidak dilanggar, keputusan diambil pada tingkat yang berwenang."],
+["PB","Kantor Anda menerima penugasan pegawai dari daerah lain dengan logat dan kebiasaan kerja yang berbeda. Beberapa rekan mulai menirukan logatnya saat ia tidak ada, lalu menjadikannya bahan tertawaan di ruang istirahat.",["Ikut tertawa secukupnya supaya tidak dianggap kaku oleh rekan sendiri.","Saat itu juga katakan bahwa Anda tidak nyaman dengan lelucon itu, lalu ajak rekan baru tersebut makan siang bersama tim.","Nasihati rekan baru itu agar menyesuaikan diri supaya tidak jadi bahan tertawaan.","Laporkan perilaku rekan-rekan itu ke kepala seksi.","Hindari ruang istirahat agar tidak terlibat."],[1,5,2,4,3],"Menghentikan perilakunya saat itu juga sekaligus memulihkan posisi rekan baru di dalam tim."],
+["MP","Struktur kerja seksi diubah dan sebagian tugas Anda dialihkan ke unit lain. Anda menilai pembagian baru ini membuat satu proses jadi berputar lebih panjang.",["Jalankan struktur baru sambil mencatat titik mana yang memperlambat, lalu ajukan usulan perbaikan dengan data waktu proses setelah satu bulan.","Pertahankan alur lama untuk bagian yang menurut Anda lebih cepat.","Sampaikan keberatan ke rekan-rekan agar penolakan terhadap struktur baru menguat.","Jalankan struktur baru apa adanya dan diam saja meski prosesnya memburuk.","Minta dikembalikan ke posisi lama karena lebih menguasai pekerjaannya."],[5,2,1,4,3],"Perubahan tetap dijalankan dan keberatan diajukan dengan data waktu proses, bukan dengan penolakan."],
+["PD","Anda ditunjuk menguasai satu aplikasi baru dalam sebulan untuk kemudian mengajari seksi. Materinya di luar bidang Anda dan tidak ada pendampingan.",["Sampaikan sejak awal bahwa penunjukan ini kurang tepat sasaran.","Pecah materinya per pekan, coba langsung pada kasus nyata seksi, catat pertanyaan yang belum terjawab, dan tanyakan ke unit pengelola aplikasi.","Tunggu kantor menyelenggarakan pelatihan resmi lebih dulu.","Pelajari seadanya, cukup sampai bisa menjelaskan garis besarnya saat mengajar nanti.","Minta rekan yang lebih paham teknologi menggantikan Anda."],[4,5,3,1,2],"Belajar lewat kasus nyata dengan sumber bantuan yang jelas, bukan menunggu kondisi ideal."],
+["INT","Anda menemukan kekeliruan perhitungan dalam berkas yang sudah Anda tandatangani dan terlanjur dikirim. Nilainya kecil dan kemungkinan besar tidak akan diperiksa siapa pun.",["Diamkan, karena nilainya tidak material dan koreksi justru menimbulkan keributan.","Laporkan kekeliruan itu ke atasan hari itu juga beserta usulan langkah perbaikannya.","Perbaiki diam-diam di arsip internal agar catatan kantor tetap benar.","Tunggu sampai ada yang menanyakan, baru dijelaskan.","Catat sebagai pelajaran pribadi dan pastikan tidak terulang."],[1,5,4,2,3],"Kekeliruan sekecil apa pun harus terdokumentasi; koreksi diam-diam menghapus jejak pertanggungjawaban."],
+["PP","Mesin antrean rusak sejak pagi dan wajib pajak mulai berkerumun tanpa urutan jelas. Petugas pelayanan hanya dua orang dan satu sedang istirahat.",["Umumkan layanan ditutup sementara sampai mesin antrean diperbaiki.","Catat urutan kedatangan secara manual di kertas, umumkan urutannya keras-keras, panggil rekan yang istirahat, dan laporkan kerusakan ke bagian umum.","Layani siapa saja yang lebih dulu sampai ke meja Anda.","Dahulukan wajib pajak yang terlihat paling mendesak urusannya.","Tunggu arahan kepala seksi tentang cara menangani antrean."],[1,5,4,2,3],"Layanan jalan, urutan tetap adil, dan penyebab masalahnya diteruskan ke yang berwenang."],
+["KS","Pekerjaan seksi Anda bergantung pada keluaran unit lain yang selalu terlambat dua hari. Akibatnya tim Anda rutin lembur di akhir pekan, dan rekan-rekan mulai menyalahkan unit itu secara terbuka.",["Balas dengan sengaja memperlambat data yang mereka butuhkan dari seksi Anda.","Temui unit itu, tunjukkan rantai waktu kerja kedua belah pihak, dan sepakati tenggat antara yang masuk akal bagi keduanya.","Minta kepala seksi mengirim nota keberatan resmi ke unit tersebut.","Terus lembur dan tidak mempersoalkan apa pun demi menjaga hubungan baik.","Sampaikan di forum kantor bahwa keterlambatan unit itu merusak kinerja seksi Anda."],[1,5,4,3,2],"Tenggat antara disepakati dari rantai waktu kedua pihak, bukan dari tuntutan atau sikap mengalah."],
+["OH","Kepala seksi meminta laporan rutin yang menurut Anda tidak pernah dibaca siapa pun, dan penyusunannya menghabiskan satu hari kerja setiap minggu.",["Hentikan menyusunnya dan lihat apakah ada yang menanyakan.","Terus susun seperti biasa tanpa mempersoalkan apa pun.","Tetap kirim laporannya, sambil menyiapkan versi ringkas satu halaman dan menawarkannya sebagai pengganti beserta hitungan waktu yang dihemat.","Kerjakan asal jadi dengan menyalin data minggu sebelumnya.","Delegasikan ke pegawai baru agar waktu Anda tidak habis."],[2,4,5,1,3],"Aturan yang berlaku tidak disabot, penggantinya diajukan beserta hitungan waktu yang dihemat."],
+["KOM","Anda menulis nota dinas berisi usulan teknis. Dikembalikan atasan dengan catatan “terlalu panjang, intinya tidak kelihatan”, padahal menurut Anda seluruh bagiannya penting.",["Kirim ulang dengan susunan sama dan tambahkan pengantar lisan saat menyerahkan.","Potong menjadi usulan di paragraf pertama, alasan utama di bawahnya, dan rincian teknis sebagai lampiran.","Pangkas setengah isinya secara merata agar halamannya berkurang.","Minta atasan menunjukkan bagian mana persisnya yang harus dibuang.","Pertahankan versi semula dan jelaskan bahwa pemangkasan akan menghilangkan dasar hukumnya."],[2,5,3,4,1],"Memenuhi permintaan atasan, yaitu inti di depan, tanpa membuang dasar teknisnya."],
+["PK","Dua rekan senior memberi arahan berbeda untuk satu berkas yang Anda tangani, keduanya mengaku pernah menangani kasus serupa. Berkas harus selesai hari ini.",["Ikuti arahan rekan yang lebih senior.","Cek sendiri dasar ketentuannya, pilih arahan yang sesuai, dan tuliskan dasar pemilihan itu di berkas.","Ambil jalan tengah dengan menggabungkan sebagian dari kedua arahan.","Minta keduanya berdiskusi dulu sampai sepakat.","Naikkan ke kepala seksi tanpa menyertakan analisis Anda sendiri."],[2,5,1,4,3],"Kembali ke sumber ketentuan dan mencatatkan dasar pilihan, sehingga keputusan bisa diuji ulang."],
+["MP","Anda ditugasi menjadi penggerak penerapan prosedur baru di seksi. Baru dua minggu, muncul keluhan bahwa prosedur baru justru menambah langkah kerja, dan sebagian benar.",["Tegaskan bahwa prosedur ini wajib dan keluhan tidak akan mengubah apa pun.","Kumpulkan keluhan yang terbukti, pisahkan mana yang soal kebiasaan dan mana yang cacat prosedur, teruskan yang cacat ke unit penyusun dengan usul perbaikan.","Hentikan penerapan sampai prosedurnya diperbaiki.","Izinkan setiap orang memakai prosedur lama atau baru sesuai kenyamanan.","Sampaikan ke seksi bahwa Anda juga tidak setuju, tetapi terpaksa menjalankan."],[4,5,3,1,2],"Memilah keluhan yang sahih dari resistensi, lalu menyalurkan yang sahih ke pihak yang bisa memperbaikinya."],
+["PB","Dalam kegiatan penyuluhan di daerah, tokoh masyarakat setempat meminta sesi dijeda untuk ibadah dan meminta penyesuaian jadwal yang menggeser acara satu jam.",["Tolak halus karena jadwal sudah disusun dan narasumber punya penerbangan sore.","Sesuaikan jadwal, pindahkan sesi tanya jawab ke setelah jeda, dan umumkan perubahan ke seluruh peserta.","Lanjutkan acara dan persilakan yang ingin beribadah keluar sendiri-sendiri.","Serahkan keputusan sepenuhnya ke panitia daerah tanpa pendapat.","Persingkat seluruh materi agar acara tetap selesai sesuai jadwal semula."],[2,5,3,1,4],"Jadwal menyesuaikan tanpa memotong materi; penghormatan adat dan isi acara sama-sama utuh."],
+["PD","Dalam penilaian kinerja, atasan menyebut kemampuan analisis Anda masih di bawah harapan. Anda merasa penilaian itu berdasarkan satu kasus yang kebetulan rumit.",["Terima tanpa komentar dan jangan dibahas lagi.","Minta contoh konkret dari kasus lain, sepakati satu sasaran perbaikan yang terukur, lalu minta ulasan singkat tiap bulan.","Sampaikan keberatan dan minta penilaian itu ditinjau ulang.","Jelaskan bahwa kasus tersebut memang di luar kebiasaan.","Cari pelatihan analisis apa pun yang tersedia dan ikuti."],[1,5,3,2,4],"Menerima mentah atau menolak sama-sama buntu; contoh konkret ditambah sasaran terukur membuat penilaian bisa diuji."],
+["INT","Rekan satu ruangan meminta tolong dibukakan akses sistem memakai akun Anda karena akunnya terkunci, dan pekerjaannya harus selesai sore ini.",["Pinjamkan akun sekali ini saja, dengan syarat Anda ikut menunggui saat ia memakainya.","Tolak, bantu ia mengajukan pembukaan kunci akun ke pengelola sistem, dan tawarkan mengerjakan bagian yang masih bisa Anda kerjakan dengan akun Anda sendiri.","Pinjamkan akun karena Anda percaya padanya dan pekerjaan kantor tidak boleh tertunda.","Tolak dan sarankan ia menyelesaikannya besok.","Laporkan permintaan itu ke kepala seksi sebagai pelanggaran."],[2,5,1,4,3],"Akses pribadi tidak dipinjamkan, tetapi pekerjaannya tetap dicarikan jalan yang sah."],
+["PP","Seorang wajib pajak menanyakan hal di luar kewenangan seksi Anda. Unit yang berwenang sedang rapat sampai sore, dan wajib pajak itu datang dari luar kota.",["Sampaikan bahwa itu bukan kewenangan Anda dan minta ia kembali besok.","Catat pertanyaannya, cari jawaban dasar yang bisa Anda pastikan, hubungi unit berwenang untuk jadwal pasti, dan kabari wajib pajak hari itu juga.","Jawab sebisanya menurut pemahaman Anda agar ia tidak pulang dengan tangan kosong.","Minta ia menunggu di lobi sampai rapat unit tersebut selesai.","Berikan nomor telepon unit itu dan persilakan ia menghubungi sendiri."],[2,5,1,3,4],"Pertanyaan tidak dilempar balik, hanya jawaban yang bisa dipastikan yang diberikan, dan kepastian waktu tetap didapat hari itu."],
+["KS","Hasil kerja tim Anda dipuji pimpinan dalam rapat, dan kepala seksi menyebut nama Anda saja sebagai penggerak utama. Padahal dua rekan mengerjakan bagian terberatnya.",["Terima pujian itu, toh yang menyebut adalah kepala seksi sendiri.","Di forum yang sama, sebutkan bagian yang dikerjakan kedua rekan tersebut beserta namanya.","Sampaikan terima kasih ke kedua rekan itu secara pribadi setelah rapat.","Tulis koreksi di grup seksi setelah rapat selesai.","Tolak pujian itu dan katakan semuanya kerja tim."],[1,5,4,3,2],"Koreksi diberikan di forum tempat kekeliruannya terjadi, bukan di belakang."],
+["OH","Mengejar target triwulan menuntut tim lembur empat malam berturut-turut. Dua anggota tim sudah terlihat kelelahan dan satu di antaranya sedang mengurus keluarga yang sakit.",["Jalankan lembur penuh untuk semua, karena target menyangkut nama seksi.","Hitung ulang pekerjaan mana yang benar-benar menentukan capaian, bebaskan anggota yang sedang mengurus keluarga, dan bagi ulang beban ke anggota yang masih kuat termasuk Anda.","Lepaskan target triwulan ini dan utamakan kondisi tim.","Minta semua lembur tetapi persilakan pulang kapan saja jika sudah tidak sanggup.","Ajukan tambahan personel ke kepala kantor dan tunggu jawabannya."],[1,5,2,3,4],"Target tidak dilepas, tetapi yang dikejar hanya pekerjaan yang menentukan, dan beban dibagi menurut kondisi nyata orangnya."],
+["PK","Anda menemukan celah penafsiran ketentuan yang, jika dipakai, menguntungkan posisi kantor dalam satu sengketa. Penafsiran itu sah secara teks, tetapi jelas menyimpang dari maksud aturannya.",["Gunakan penafsiran itu, karena secara teks tidak melanggar apa pun.","Jangan gunakan, susun argumen berdasarkan maksud aturannya, dan laporkan celah tersebut ke unit penyusun ketentuan.","Gunakan sambil mencantumkan catatan bahwa penafsirannya masih bisa diperdebatkan.","Serahkan sepenuhnya ke atasan tanpa menyampaikan pandangan Anda.","Hindari isu itu dan pakai argumen lain yang lebih lemah."],[1,5,4,2,3],"Sah secara teks tidak membuatnya benar; celahnya ditutup, bukan dipakai."],
+["KOM","Anda harus menyampaikan ke wajib pajak bahwa permohonannya ditolak. Ia sudah dua kali datang jauh, selalu sopan, dan sangat berharap pada hasil ini.",["Sampaikan penolakan lewat surat saja agar tidak canggung bertatap muka.","Sampaikan langsung, sebutkan dasar penolakan beserta bagian berkas yang tidak terpenuhi, dan jelaskan jalur keberatan yang terbuka baginya.","Kaburkan bahasanya agar ia tidak terlalu kecewa dan paham sendiri nanti.","Sampaikan penolakan sambil menyalahkan ketentuan yang menurut Anda memang kaku.","Tunda menyampaikannya sampai ada kabar baik lain yang bisa disampaikan bersamaan."],[4,5,2,3,1],"Kabar buruk disampaikan langsung, lengkap dengan dasar penolakan dan jalan yang masih terbuka."],
+["MP","Di tengah penerapan sistem baru, terjadi gangguan besar dan layanan terhambat seharian. Rekan-rekan mendesak kembali ke sistem lama, sedangkan pimpinan menuntut penerapan jalan terus.",["Kembalikan ke sistem lama demi layanan, dan laporkan belakangan.","Siapkan prosedur darurat sementara untuk layanan berjalan, catat gangguan dengan bukti waktu dan dampaknya, lalu laporkan ke pimpinan beserta usul langkah pemulihan.","Tetap pakai sistem baru apa pun yang terjadi dan minta wajib pajak bersabar.","Minta rekan-rekan menyampaikan protesnya langsung ke pimpinan.","Tunggu arahan tertulis sebelum melakukan apa pun."],[3,5,4,1,2],"Layanan diamankan lebih dulu, perubahan tidak dibatalkan sepihak, dan keputusan lanjutan diserahkan dengan bukti."],
+["PP","Seorang wajib pajak mendesak minta dilayani lebih dulu karena mengaku kenal pejabat di kantor Anda dan menyebut namanya. Antrean sedang panjang.",["Dahulukan ia untuk menghindari persoalan dengan pejabat yang disebut.","Jelaskan bahwa urutan berlaku sama untuk semua, tawarkan layanan setelah gilirannya tiba, dan laporkan upaya pengaruh itu ke atasan Anda.","Layani ia di sela-sela antrean agar tidak terlalu mencolok.","Minta ia menghubungi langsung pejabat yang disebutnya.","Abaikan permintaannya tanpa penjelasan apa pun dan panggil nomor berikutnya."],[1,5,2,3,4],"Perlakuan sama ditegakkan dan upaya memengaruhi dicatat, bukan sekadar ditolak diam-diam."],
+["KS","Rekan satu tim berulang kali menyerahkan bagiannya mendekati tenggat dengan kualitas seadanya, dan Anda yang merapikan. Ia sedang menghadapi masalah keluarga yang berat.",["Terus menutupi kekurangannya tanpa bicara apa pun demi menjaga perasaannya.","Bicara empat mata, akui kesulitannya, sepakati pembagian ulang beban untuk sementara, dan tetapkan titik periksa di tengah pekerjaan.","Laporkan kualitas kerjanya ke kepala seksi agar ada pembinaan resmi.","Kurangi kontribusi Anda juga agar bebannya terasa adil.","Tetapkan tenggat internal lebih awal untuknya tanpa membicarakan alasannya."],[2,5,3,1,4],"Kesulitannya diakui tanpa menurunkan standar kerja; titik periksa mencegahnya berulang."],
+["PB","Dalam penugasan di daerah, adat setempat mengharuskan tamu menerima jamuan tertentu. Menolak dianggap penghinaan, tetapi nilai jamuan itu mendekati batas yang diatur ketentuan gratifikasi.",["Terima dan nikmati jamuannya, karena ini soal adat bukan soal pemberian.","Ikuti jamuan bersama dalam acara terbuka, tolak barang bawaan pulang, dan laporkan penerimaan itu beserta konteks adatnya ke unit pengendali gratifikasi.","Tolak tegas di depan tuan rumah sambil menjelaskan aturan gratifikasi.","Terima lalu diam-diam serahkan ke panitia daerah setelah acara.","Hindari hadir di acara jamuan itu dengan alasan kesehatan."],[2,5,4,3,1],"Adat dihormati pada bagian yang bisa, batas gratifikasi dijaga pada bagian yang tidak bisa, dan keduanya dilaporkan."],
+["PD","Anda ditawari penugasan baru yang menantang, tetapi jika diambil, pekerjaan seksi akan kekurangan satu orang pada masa tersibuk.",["Tolak penugasan itu demi kelancaran seksi.","Sampaikan minat Anda, petakan pekerjaan apa saja yang Anda pegang dan siapa yang bisa melanjutkan, lalu serahkan keputusan ke kepala seksi dengan rencana peralihan itu.","Ambil penugasan dan serahkan pekerjaan lama apa adanya.","Tunda keputusan sampai masa sibuk lewat, meski tawarannya mungkin hangus.","Ambil keduanya dan kerjakan dengan lembur."],[4,5,1,3,2],"Kesempatan tidak dilepas dan risiko seksi tidak disembunyikan; keputusan diserahkan ke yang berwenang bersama rencana peralihan."],
+["OH","Di pekan terakhir, cara tercepat memenuhi indikator kinerja adalah menghitung ulang satu kegiatan lama sebagai capaian periode ini. Secara catatan hal itu bisa dipertahankan, tetapi tidak menambah hasil nyata apa pun.",["Lakukan, karena indikator kantor harus tercapai dan catatannya sah.","Jangan lakukan, laporkan capaian apa adanya beserta penyebab kekurangannya dan rencana periode berikutnya.","Lakukan sebagian saja agar capaian naik tipis tanpa terlalu mencolok.","Tanyakan ke kepala seksi apakah cara itu lazim dipakai di seksi lain.","Lakukan sambil mencantumkan catatan kaki bahwa kegiatan itu berasal dari periode lalu."],[1,5,2,4,3],"Capaian tidak dipoles; kekurangannya dijelaskan beserta rencana periode berikutnya."],
+["INT","Atasan meminta Anda mengubah satu angka dalam laporan agar capaian terlihat memenuhi target. Ia menegaskan selisihnya kecil dan ini perintah.",["Ubah angkanya, karena ini perintah atasan dan tanggung jawabnya ada padanya.","Tolak dengan sopan, sampaikan konsekuensi jika ketahuan, tawarkan menulis penjelasan atas selisih capaian itu, dan minta perintah tersebut tertulis bila tetap diminta.","Ubah angkanya tetapi simpan versi asli sebagai bukti pribadi.","Tolak dan langsung laporkan atasan Anda ke inspektorat hari itu juga.","Minta rekan lain yang mengerjakan perubahan itu."],[1,5,3,4,2],"Menolak sekaligus menawarkan jalan keluar yang sah; permintaan tertulis menempatkan risiko pada pihak yang memerintahkan."],
+["INT","Anda mengetahui rekan dekat Anda, yang selama ini banyak menolong, menerima pemberian dari wajib pajak. Ia mengaku dan memohon Anda diam, dengan alasan istrinya sedang sakit berat.",["Diamkan, karena ia sudah mengaku dan alasannya manusiawi.","Minta ia melaporkan sendiri dan mengembalikan pemberian itu dalam tenggat yang Anda sebutkan, dan sampaikan bahwa jika tidak, Anda yang akan melaporkannya.","Laporkan langsung ke inspektorat tanpa memberitahunya lebih dulu.","Minta ia mengembalikan pemberian itu saja, cukup tanpa laporan apa pun.","Jauhi dia dan anggap urusan itu bukan tanggung jawab Anda."],[1,5,4,3,2],"Memberi jalan mengoreksi diri yang berbatas waktu, tanpa menjadikan kedekatan sebagai alasan menutupi."],
+["PK","Keputusan yang paling tepat menurut ketentuan akan membuat satu usaha kecil berhenti beroperasi dan beberapa orang kehilangan pekerjaan. Anda punya ruang penundaan beberapa minggu, tetapi tidak punya dasar untuk mengubah kesimpulannya.",["Ubah kesimpulan agar usaha itu bertahan, karena dampak sosialnya lebih besar.","Tetapkan kesimpulan sesuai ketentuan, sampaikan sedini mungkin, dan jelaskan pilihan yang masih terbuka bagi wajib pajak beserta tenggatnya.","Tunda terus selama mungkin agar mereka punya waktu bersiap.","Naikkan ke atasan agar Anda tidak menanggung beban keputusannya.","Tetapkan sesuai ketentuan dan jangan bahas dampaknya dengan pihak mana pun."],[1,5,2,3,4],"Kesimpulan tidak diubah, tetapi waktu dan informasi diberikan sebanyak mungkin agar mereka sempat bersiap."],
+["PB","Rekan seksi menolak bekerja sama dengan pegawai baru karena perbedaan keyakinan, dan diam-diam mengatur pembagian tugas agar tidak pernah satu tim dengannya. Kinerja seksi belum terganggu.",["Biarkan selama pekerjaan masih berjalan lancar.","Tegur rekan itu secara pribadi, kembalikan pembagian tugas pada dasar kompetensi, dan sampaikan pola ini ke kepala seksi bila berulang.","Beri tahu pegawai baru itu agar ia bersiap menghadapi sikap rekan tersebut.","Atur sendiri agar mereka satu tim tanpa membicarakan alasannya.","Laporkan ke kepala seksi sebagai dugaan diskriminasi tanpa bicara dulu dengan rekan itu."],[1,5,2,3,4],"Pembagian tugas dikembalikan ke dasar kompetensi, dan pola yang berulang tidak dibiarkan mengendap."],
+["KOM","Pimpinan meminta Anda menyampaikan kebijakan baru ke seksi, padahal Anda sendiri menilai kebijakan itu keliru dan akan menyulitkan pelaksana.",["Sampaikan kebijakan itu lengkap dan jelas, pisahkan dengan tegas antara isi kebijakan dan pandangan pribadi Anda, lalu salurkan keberatan Anda ke pimpinan melalui jalur resmi beserta datanya.","Sampaikan sambil menyisipkan bahwa Anda pribadi tidak setuju.","Sampaikan seadanya dan serahkan penafsirannya ke masing-masing orang.","Minta orang lain yang menyampaikannya karena Anda tidak yakin.","Sampaikan hanya bagian yang Anda setujui saja."],[5,4,2,3,1],"Kebijakan tersampaikan utuh, keberatan tetap hidup lewat jalur yang benar-benar bisa mengubahnya."],
+["MP","Kantor menetapkan pembagian kerja baru yang Anda tahu akan gagal, karena pola serupa pernah dicoba tiga tahun lalu dan berantakan. Tidak ada yang ingat kejadian itu.",["Jalankan tanpa berkata apa-apa dan tunggu sampai terbukti sendiri.","Tuliskan apa yang terjadi tiga tahun lalu beserta sebab kegagalannya, ajukan sebagai bahan pertimbangan dengan usul pengaman, lalu jalankan keputusan apa pun yang diambil.","Sampaikan di grup seksi bahwa cara ini pernah gagal agar semua bersiap kecewa.","Menolak ikut karena sudah jelas akan sia-sia.","Jalankan tetapi siapkan alur kerja cadangan diam-diam untuk Anda sendiri."],[4,5,2,1,3],"Ingatan organisasi dituliskan sebagai bahan pertimbangan, bukan sebagai alasan menolak."],
+["PP","Seorang wajib pajak yang benar-benar tidak mampu terkena sanksi administrasi. Secara aturan sanksi itu tepat, tetapi Anda tahu ia tidak akan sanggup membayarnya.",["Hapuskan sanksi itu diam-diam demi keadilan.","Tetap tegakkan sanksinya, jelaskan dasarnya, dan tunjukkan mekanisme resmi yang tersedia baginya beserta syarat dan cara mengajukannya.","Sarankan ia mengabaikan saja tagihan itu karena kemungkinan tidak ditagih.","Jelaskan sanksinya lalu akhiri, karena kesulitan keuangan bukan urusan kantor.","Kumpulkan iuran dari rekan sekantor untuk membantunya membayar."],[1,5,2,4,3],"Sanksi tidak diperdagangkan; keringanan hanya sah lewat mekanisme resmi."],
+["KS","Tim Anda sepakat memakai satu pendekatan, tetapi Anda yakin pendekatan itu akan menimbulkan masalah di tahap akhir. Anda sudah menyampaikannya dan kalah suara.",["Jalankan sepenuh tenaga sesuai kesepakatan, sambil menandai titik rawan yang Anda khawatirkan sebagai bahan periksa bersama di tahap tersebut.","Jalankan setengah hati agar tidak terlalu rugi jika gagal.","Ulangi keberatan Anda di setiap rapat sampai tim berubah pikiran.","Bawa keberatan itu ke kepala seksi untuk membatalkan keputusan tim.","Jalankan tanpa berkata apa-apa lagi, dan biarkan masalah muncul sendiri agar jelas siapa yang benar."],[5,2,4,3,1],"Kesepakatan tim dijalankan penuh dan kekhawatiran diubah jadi titik periksa, bukan jadi sabotase diam."],
+["PD","Pegawai yang Anda bimbing kini lebih menguasai satu bidang daripada Anda, dan mulai dilirik untuk tugas yang selama ini Anda pegang.",["Pertahankan tugas itu dengan menonjolkan pengalaman Anda yang lebih panjang.","Usulkan ia memimpin bidang tersebut, serahkan catatan kerja Anda, dan ambil bagian yang masih membutuhkan Anda.","Bagi tugas itu berdua agar tidak ada yang tersisih.","Kurangi membimbingnya agar jaraknya tidak melebar lagi.","Diam saja dan tunggu keputusan pimpinan."],[2,5,4,1,3],"Kaderisasi didahulukan di atas mempertahankan wilayah sendiri."],
+["OH","Target seksi hanya tercapai bila Anda menerima hasil kerja yang belum diperiksa ulang. Jika diperiksa, hampir pasti meleset dari tenggat, dan kesalahan semacam ini pernah lolos tanpa akibat.",["Terima tanpa pemeriksaan, karena target lebih penting dan risikonya kecil.","Periksa bagian yang paling berisiko salah lebih dulu, laporkan ke kepala seksi perkiraan keterlambatan beserta alasannya, dan minta keputusan prioritas.","Terima tanpa pemeriksaan, lalu perbaiki belakangan bila ada yang mempersoalkan.","Periksa seluruhnya dan lewati tenggat tanpa memberi tahu siapa pun.","Terima, tetapi tulis catatan bahwa berkas belum diperiksa ulang."],[1,5,2,3,4],"Risiko diperiksa menurut prioritas, dan keterlambatan dibuka sebelum terjadi, bukan sesudah."],
+["PK","Keadaan mendesak menuntut keputusan sekarang, sementara dasar ketentuannya multitafsir dan unit yang berwenang menafsirkan baru bisa menjawab pekan depan.",["Putuskan berdasarkan penafsiran yang paling aman bagi Anda pribadi.","Ambil keputusan sementara yang paling kecil risikonya dan masih bisa dikoreksi, catat dasar pertimbangannya, dan ajukan permintaan penegasan ke unit berwenang hari itu juga.","Tunda sampai penafsiran resmi turun pekan depan.","Ikuti saja kebiasaan yang selama ini dipakai di seksi.","Lempar keputusan itu ke atasan tanpa menyertakan pilihan dan risikonya."],[1,5,4,3,2],"Keadaan mendesak dijawab dengan keputusan yang masih bisa dikoreksi, sambil meminta penegasan resmi."]
+];
+var JEN=["","Pelaksana","Pengawas","Administrator","JPT Pratama","JPT Madya"];
+/* Level per soal = level indikator Permenpan RB 38/2017 yang diwujudkan opsi bobot 5. */
+var LV=[
+[1,"Melayani kebutuhan dan menyelesaikan masalah dengan tepat sesuai standar pelayanan."],
+[1,"Tidak menerima sesuatu yang bertentangan dengan aturan; menjalankan kode etik pada tataran pribadi."],
+[3,"Bernegosiasi secara efektif untuk penyelesaian pekerjaan dan mencari solusi optimal."],
+[2,"Mencari dan mencoba metode kerja alternatif untuk meningkatkan hasil kerja."],
+[3,"Menyampaikan informasi sensitif dengan cara dan kondisi yang tepat agar diterima pihak lain."],
+[2,"Menampilkan sikap peduli nilai keberagaman dan menghargai perbedaan."],
+[2,"Menganalisis informasi secara mendalam dan membuat keputusan operasional dari berbagai sumber."],
+[3,"Membantu orang lain dalam melakukan perubahan."],
+[3,"Mengamati, memberi umpan balik objektif, dan mempercayakan bawahan mengerjakan dengan caranya sendiri."],
+[1,"Bertindak sesuai nilai dan kode etik dalam kapasitas pribadi; tidak menjanjikan hal yang melanggar aturan."],
+[3,"Memperbaiki standar pelayanan dan memantau masalah pemangku kepentingan di unit kerja."],
+[3,"Mengutamakan keputusan berdasarkan usulan anggota tim dan mengantisipasi hambatan."],
+[1,"Menyelesaikan tugas dengan tuntas dan dapat diandalkan."],
+[3,"Menyederhanakan topik yang rumit agar mudah dipahami dan diterima."],
+[1,"Mengenali pilihan tindakan yang tepat sesuai kewenangan."],
+[2,"Membangun hubungan baik antarindividu dan menghargai perbedaan."],
+[2,"Proaktif menerapkan proses baru sesuai ketentuan tanpa menunggu arahan."],
+[1,"Usaha mandiri mempelajari keterampilan baru dan belajar dari orang yang lebih paham."],
+[1,"Berkata dan bertindak sesuai fakta."],
+[2,"Cepat dan tanggap menjalankan pelayanan sesuai kebutuhan pemangku kepentingan."],
+[3,"Membangun aliansi dengan pemangku kepentingan untuk menyelesaikan target kerja kelompok."],
+[2,"Mencari metode kerja alternatif dan memberi contoh penerapannya."],
+[2,"Membuat draft naskah dan laporan sesuai arahan pimpinan."],
+[2,"Mempertimbangkan berbagai alternatif sebelum membuat kesimpulan."],
+[3,"Memberikan solusi efektif terhadap masalah yang ditimbulkan perubahan."],
+[3,"Memetakan kondisi sosial dan merespons sesuai budaya yang berlaku."],
+[1,"Mengidentifikasi kebutuhan pengembangan diri dan memilih cara belajarnya."],
+[2,"Mengingatkan rekan kerja untuk bertindak sesuai etika organisasi."],
+[2,"Aktif mencari informasi untuk memenuhi kebutuhan pemangku kepentingan secara cepat dan tanggap."],
+[2,"Mempertimbangkan masukan dan keahlian anggota tim."],
+[3,"Menetapkan cara kerja yang lebih efektif untuk mencapai target unit."],
+[3,"Memilih alternatif terbaik dengan prinsip kehati-hatian setelah membandingkan implikasinya."],
+[3,"Menyampaikan informasi sensitif agar dapat dipahami dan diterima."],
+[3,"Memberikan solusi efektif terhadap masalah akibat perubahan."],
+[1,"Melayani secara netral, tidak memihak, dan tidak terpengaruh kepentingan pribadi atau kelompok."],
+[2,"Membantu orang lain menyelesaikan tugas demi sasaran tim."],
+[3,"Mengidentifikasi potensi salah paham akibat keragaman budaya dan merespons dengan tepat."],
+[1,"Mengidentifikasi kebutuhan pengembangan diri dan mencari kesempatan belajar."],
+[2,"Menetapkan standar kerja pribadi yang lebih tinggi daripada sekadar memenuhi angka."],
+[4,"Berani mengoreksi penyimpangan nilai yang dilakukan orang lain meskipun ada risiko."],
+[2,"Mengingatkan dan mengajak rekan kerja bertindak sesuai kode etik."],
+[4,"Membuat keputusan sambil mengantisipasi dampaknya dan menyiapkan tindakan penanganannya."],
+[3,"Menjadi mediator untuk meredam konflik atau potensi konflik."],
+[3,"Menyampaikan informasi sensitif dengan cara yang tepat dan tetap menyalurkan masukan."],
+[3,"Mengantisipasi perubahan yang dibutuhkan dan memberi solusi atas masalahnya."],
+[2,"Menjelaskan secara objektif ketika kebijakan dipertanyakan."],
+[1,"Mendukung keputusan tim dan menjalankan bagiannya."],
+[4,"Mengembangkan orang di sekitarnya dan melakukan kaderisasi."],
+[1,"Bekerja teliti untuk meminimalkan kesalahan sesuai standar."],
+[4,"Memutuskan dalam risiko tinggi dengan tindakan pengamanan dan mitigasi."]
+];
+var LET="ABCDE", N=D.length, KEY="mansoskul-djp-20261029-dasar-v1";
+
+/* Seeded shuffle so the best option lands evenly on A–E (10 each) and stays fixed across reloads. */
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+var R=rng(20261029);
+function shuf(arr){for(var i=arr.length-1;i>0;i--){var j=Math.floor(R()*(i+1));var t=arr[i];arr[i]=arr[j];arr[j]=t}return arr}
+var bestSlot=[];for(var k=0;k<N;k++)bestSlot.push(k%5);shuf(bestSlot);
+var Q=D.map(function(d,i){
+  var best=d[3].indexOf(5), others=shuf([0,1,2,3,4].filter(function(x){return x!==best}));
+  var order=[],o=0;for(var s=0;s<5;s++){order.push(s===bestSlot[i]?best:others[o++])}
+  return {comp:d[0],stem:d[1],opts:d[2],w:d[3],why:d[4],order:order,bestSlot:bestSlot[i],lv:LV[i][0],ind:LV[i][1]};
+});
+function lvl(i){return i<30?"Dasar":i<40?"Dilema":"Konflik nilai"}
+
+var st={ans:{},cur:0,view:"latihan"};
+try{var raw=localStorage.getItem(KEY);if(raw){var p=JSON.parse(raw);if(p&&p.ans)st.ans=p.ans;if(typeof p.cur==="number")st.cur=Math.min(Math.max(p.cur,0),N-1)}}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify({ans:st.ans,cur:st.cur}))}catch(e){}}
+
+function wOf(i){var a=st.ans[i];return a==null?null:Q[i].w[a]}
+var VERD={5:"Tepat",4:"Hampir tepat",3:"Kurang tepat",2:"Salah",1:"Salah"};
+var VNOTE={5:"Ini respons terbaik.",4:"Arahnya benar, tetapi ada langkah yang lebih tuntas.",3:"Sikapnya aman, tetapi masalahnya belum terselesaikan.",2:"Respons ini memindahkan atau menunda masalah.",1:"Respons ini melanggar aturan atau mengabaikan masalah."};
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+
+function renderQ(){
+  var i=st.cur,q=Q[i],a=st.ans[i],done=a!=null,el=document.getElementById("qcard");
+  var h='<div class="qhead"><span class="qno">Soal '+(i+1)+' / '+N+'</span><span class="chip">'+COMP[q.comp]+'</span><span class="chip lv">Level '+q.lv+' · '+JEN[q.lv]+'</span><span class="chip lvl">'+lvl(i)+'</span></div>';
+  h+='<p class="stem">'+esc(q.stem)+'</p><div class="opts'+(done?' answered':'')+'" role="group" aria-label="Pilihan jawaban">';
+  q.order.forEach(function(oi,s){
+    var w=q.w[oi],cls="opt w"+w+(done&&w===5?" best":"")+(done&&a===oi?" mine":"");
+    h+='<button class="'+cls+'" id="q'+i+'o'+s+'" data-o="'+oi+'"'+(done?' disabled':'')+'><span class="L">'+LET[s]+'</span><span class="t">'+esc(q.opts[oi])+'</span><span class="w">bobot '+w+'</span></button>';
+  });
+  h+='</div>';
+  if(done){
+    var w=q.w[a],my=LET[q.order.indexOf(a)];
+    h+='<div class="verdict w'+w+'" role="status"><strong>'+VERD[w]+' · Anda memilih '+my+' (bobot '+w+')</strong><p>'+VNOTE[w]+'</p><p><span class="k">Kunci: </span><b>'+LET[q.bestSlot]+'</b> — '+esc(q.why)+'</p><p><span class="k">Level '+q.lv+' ('+JEN[q.lv]+'): </span>'+esc(q.ind)+'</p></div>';
+  }
+  h+='<div class="navrow"><button class="btn" id="prevBtn"'+(i===0?' disabled':'')+'>← Sebelumnya</button>';
+  var nextLabel=i===N-1?"Lihat rekap":"Berikutnya →";
+  h+='<button class="btn'+(done?' primary':'')+'" id="nextBtn">'+nextLabel+'</button></div>';
+  el.innerHTML=h;
+  el.querySelectorAll(".opt").forEach(function(b){b.addEventListener("click",function(){
+    if(st.ans[i]!=null)return;st.ans[i]=+b.getAttribute("data-o");save();renderAll();
+    var v=document.querySelector(".verdict");if(v&&v.scrollIntoView)v.scrollIntoView({block:"nearest",behavior:"smooth"});
+  })});
+  document.getElementById("prevBtn").onclick=function(){go(i-1)};
+  document.getElementById("nextBtn").onclick=function(){if(i===N-1)setView("rekap");else go(i+1)};
+}
+function go(i){if(i<0||i>=N)return;st.cur=i;save();renderQ();renderGrid();var c=document.getElementById("qcard");var top=c.getBoundingClientRect().top;if(top<60)window.scrollBy({top:top-80,behavior:"smooth"})}
+
+function renderGrid(){
+  var h="";for(var i=0;i<N;i++){var w=wOf(i);h+='<button class="cell'+(w?' done w'+w:'')+(i===st.cur?' cur':'')+'" id="cell'+i+'" data-i="'+i+'" aria-label="Soal '+(i+1)+(w?', bobot '+w:', belum dijawab')+'">'+(i+1)+'</button>'}
+  var g=document.getElementById("grid");g.innerHTML=h;
+  g.querySelectorAll(".cell").forEach(function(c){c.onclick=function(){setView("latihan");go(+c.getAttribute("data-i"))}});
+}
+function totals(){var n=0,s=0;for(var i=0;i<N;i++){var w=wOf(i);if(w){n++;s+=w}}return{n:n,s:s}}
+function renderStats(){
+  var t=totals();
+  document.getElementById("sDone").textContent=t.n+"/"+N;
+  document.getElementById("sScore").textContent=t.s;
+  document.getElementById("sPct").textContent=t.n?Math.round(t.s/(t.n*5)*100)+"%":"–";
+  document.getElementById("prog").style.width=(t.n/N*100)+"%";
+}
+function renderKunci(){
+  var h='<thead><tr><th class="n">No</th><th>Kompetensi</th><th>Level</th><th>Kunci</th><th>Bobot A–E</th><th>Jawaban Anda</th><th>Alasan</th></tr></thead><tbody>';
+  Q.forEach(function(q,i){
+    var ws=q.order.map(function(oi){return q.w[oi]}).join(" · "),a=st.ans[i],mine="–";
+    if(a!=null){var w=q.w[a];mine='<span class="pill w'+w+'"><span class="mykey">'+LET[q.order.indexOf(a)]+'</span> · '+w+'</span>'}
+    h+='<tr><td class="n">'+(i+1)+'</td><td>'+COMP[q.comp]+'</td><td style="white-space:nowrap">L'+q.lv+' · '+JEN[q.lv]+'</td><td class="key">'+LET[q.bestSlot]+'</td><td class="n" style="text-align:left;white-space:nowrap">'+ws+'</td><td>'+mine+'</td><td style="min-width:240px">'+esc(q.why)+'</td></tr>';
+  });
+  document.getElementById("ktable").innerHTML=h+"</tbody>";
+}
+function band(w){return w>=.8?5:w>=.7?3:1}
+function renderRekap(){
+  var t=totals(),el=document.getElementById("rekap");
+  var h='<h2>Rekap skor</h2><div class="big" style="margin-top:10px"><b>'+t.s+'</b><span>dari '+(t.n*5)+' untuk '+t.n+' soal yang dijawab · maksimal paket 250</span></div>';
+  if(t.n<N)h+='<p class="note">Masih ada '+(N-t.n)+' soal belum dijawab. Persentase di bawah dihitung dari soal yang sudah dijawab.</p>';
+  else{
+    var tf=t.s>=215?"Pola pilihan sudah stabil. Periksa butir yang tetap meleset; biasanya tersisa di nomor 41–50.":t.s>=190?"Aman di soal dasar, goyah saat dua kepentingan berbenturan. Latih ulang bagian 31–50.":t.s>=160?"Ada kecenderungan memilih opsi yang patuh tetapi melempar masalah, atau menolong dengan menabrak prosedur. Lihat kompetensi di bawah ambang.":"Arah jawaban belum terbentuk. Ulangi paket ini dua hari lagi tanpa melihat kunci, lalu bandingkan pilihan yang berubah.";
+    h+='<p class="note">'+tf+'</p>';
+  }
+  h+='<div class="tblwrap"><table><thead><tr><th>Kompetensi</th><th class="n">Skor</th><th class="n">Maks</th><th>Capaian</th><th>Status</th></tr></thead><tbody>';
+  Object.keys(COMP).forEach(function(c){
+    var s=0,m=0,tot=0;Q.forEach(function(q,i){if(q.comp!==c)return;tot++;var w=wOf(i);if(w){s+=w;m+=5}});
+    var pct=m?s/m:null,b=pct==null?null:band(pct);
+    h+='<tr><td>'+COMP[c]+' <span class="note" style="font-size:12px">('+tot+' soal)</span></td><td class="n">'+(m?s:"–")+'</td><td class="n">'+(m||"–")+'</td>';
+    h+='<td>'+(m?'<div class="bar100 w'+b+'"><i style="width:'+Math.round(pct*100)+'%"></i></div>':'')+'</td>';
+    h+='<td>'+(m?'<span class="pill w'+b+'">'+Math.round(pct*100)+'% · '+(pct>=.8?"Aman":pct>=.7?"Tipis":"Perlu dilatih")+'</span>':'<span class="note" style="font-size:12px">Belum ada</span>')+'</td></tr>';
+  });
+  h+='</tbody></table></div><p class="note">Ambang aman per kompetensi: 80% dari skor maksimal.</p>';
+  h+='<h2 style="margin-top:22px">Skor per level kompetensi</h2><div class="tblwrap"><table><thead><tr><th>Level</th><th class="n">Soal</th><th class="n">Skor</th><th>Status</th></tr></thead><tbody>';
+  [1,2,3,4].forEach(function(L){
+    var s=0,m=0,tot=0;Q.forEach(function(q,i){if(q.lv!==L)return;tot++;var w=wOf(i);if(w){s+=w;m+=5}});
+    var pct=m?s/m:null,b=pct==null?null:band(pct);
+    h+='<tr><td>Level '+L+' · '+JEN[L]+'</td><td class="n">'+tot+'</td><td class="n">'+(m?s+'/'+m:'–')+'</td><td>'+(m?'<span class="pill w'+b+'">'+Math.round(pct*100)+'%</span>':'<span class="note" style="font-size:12px">Belum ada</span>')+'</td></tr>';
+  });
+  h+='</tbody></table></div><p class="note">Bandingkan dengan level standar jabatan yang Anda tuju. Skor di level itu dan di bawahnya yang paling menentukan.</p>';
+  h+='<h2 style="margin-top:22px">Pola kesalahan yang sering muncul</h2><ul class="tips">'+
+   '<li>Memilih melapor ke atasan sebagai langkah pertama, padahal masalahnya masih dalam jangkauan Anda. Bobotnya hampir selalu 3, bukan 5.</li>'+
+   '<li>Memilih opsi yang paling menolong wajib pajak dengan mengorbankan syarat formal. Itu bobot 1–2, sama rendahnya dengan menolak tanpa jalan keluar.</li>'+
+   '<li>Memilih menunggu arahan saat tenggat sudah di depan. Bobot 2, karena tidak ada keputusan yang diambil.</li>'+
+   '<li>Pada butir integritas, memilih memperbaiki atau mengembalikan tanpa melapor. Nyaris selalu bobot 3–4, tidak pernah 5.</li></ul>';
+  h+='<div class="navrow"><span id="resetZone"><button class="btn" id="resetBtn">Ulang dari awal</button></span></div>';
+  el.innerHTML=h;
+  document.getElementById("resetBtn").onclick=function(){
+    document.getElementById("resetZone").innerHTML='<span class="confirm">Semua jawaban akan dihapus. <button class="btn primary" id="resetYes">Hapus dan mulai lagi</button><button class="btn" id="resetNo">Batal</button></span>';
+    document.getElementById("resetYes").onclick=function(){st.ans={};st.cur=0;save();setView("latihan")};
+    document.getElementById("resetNo").onclick=renderRekap;
+  };
+}
+function setView(v){
+  st.view=v;["latihan","kunci","rekap"].forEach(function(x){document.getElementById("v-"+x).hidden=x!==v;document.getElementById("tab-"+x).setAttribute("aria-selected",x===v?"true":"false")});
+  renderAll();window.scrollTo({top:0});
+}
+function renderAll(){renderStats();renderGrid();if(st.view==="latihan")renderQ();if(st.view==="kunci")renderKunci();if(st.view==="rekap")renderRekap()}
+document.querySelectorAll("nav.tabs button").forEach(function(b){b.onclick=function(){setView(b.getAttribute("data-v"))}});
+document.addEventListener("keydown",function(e){
+  if(st.view!=="latihan"||e.target.closest&&e.target.closest("input,textarea"))return;
+  var k=e.key.toUpperCase(),s=LET.indexOf(k);
+  if(s>=0&&k.length===1&&st.ans[st.cur]==null){var b=document.getElementById("q"+st.cur+"o"+s);if(b)b.click()}
+  else if(e.key==="ArrowRight")go(st.cur+1);else if(e.key==="ArrowLeft")go(st.cur-1);
+});
+renderAll();
+})();
+</script>
+
+</body></html>

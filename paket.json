@@ -1,0 +1,38 @@
+[
+  {
+    "id": "2026-10-31",
+    "tanggal": "2026-10-31",
+    "judul": "Paket 31 Oktober 2026",
+    "tingkat": "Sangat sulit",
+    "level": "Level 1–5",
+    "kunci": "mansoskul-djp-20261031-v1",
+    "jumlah": 50
+  },
+  {
+    "id": "2026-10-30",
+    "tanggal": "2026-10-30",
+    "judul": "Paket 30 Oktober 2026",
+    "tingkat": "Sangat sulit",
+    "level": "Level 1–5",
+    "kunci": "mansoskul-djp-20261030-v1",
+    "jumlah": 50
+  },
+  {
+    "id": "2026-10-29",
+    "tanggal": "2026-10-29",
+    "judul": "Paket 29 Oktober 2026",
+    "tingkat": "Sulit",
+    "level": "Level 2–4",
+    "kunci": "mansoskul-djp-20261029-v1",
+    "jumlah": 50
+  },
+  {
+    "id": "2026-10-29-dasar",
+    "tanggal": "2026-10-29",
+    "judul": "Paket 29 Oktober 2026 (dasar)",
+    "tingkat": "Dasar",
+    "level": "Level 1–4",
+    "kunci": "mansoskul-djp-20261029-dasar-v1",
+    "jumlah": 50
+  }
+]
