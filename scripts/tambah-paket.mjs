@@ -15,8 +15,7 @@ let html = fs.readFileSync(src, "utf8");
 
 const key = (html.match(/KEY="([^"]+)"/) || [])[1];
 if (!key) { console.error("Konstanta KEY tidak ditemukan di file."); process.exit(1); }
-const jumlah = (html.match(/^\["(INT|KS|OH|PP|PK|KOM|MP|PD|PB)",/gm) || []).length
-  || (html.match(/\["(INT|KS|OH|PP|PK|KOM|MP|PD|PB)","/g) || []).length;
+const jumlah = (html.match(/\["(INT|KS|OH|PP|PK|KOM|MP|PD|PB)","/g) || []).length;
 
 if (!/^<!doctype/i.test(html.trim())) {
   html = '<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"></head><body>\n' + html + "\n</body></html>\n";
